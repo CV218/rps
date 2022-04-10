@@ -8,62 +8,79 @@ function randomNum() {
 //compSelection assigns the computers play using the random number
 compSelection = arrayRPS[randomNum()];
 
-//playerInput takes input corrects capitalization.
-playerInput = 'rOck';
-playerSelection = playerInput.charAt(0).toUpperCase() + playerInput.slice(1).toLowerCase();
+button = document.querySelectorAll('button');
+let playerSelection = ''
+button.forEach(button => button.addEventListener('click',function(e) {
+  playerSelection = button.dataset.play;
+  compSelection = arrayRPS[randomNum()];
+  resultsText.textContent = playRound(compSelection, playerSelection);
+  wins();
+  checkWins();
+}
+))
 
+const container = document.querySelector('.results');
+const resultsText = document.createElement('div');
+resultsText.classList.add('res');
+container.appendChild(resultsText);
+const compDisplay = document.createElement('div');
+const playerDisplay = document.createElement('div');
+const winnerResult = document.createElement('div');
+container.appendChild(compDisplay);
+container.appendChild(playerDisplay);
+container.appendChild(winnerResult);
+compDisplay.textContent = 'Computer: 0';
+playerDisplay.textContent = 'Player: 0';
+
+
+let compWins = 0
+let playerWins = 0
+function wins() {
+compDisplay.textContent = `Computer: ${compWins}`;
+playerDisplay.textContent = `Player: ${playerWins}`;
+}
+
+function checkWins() {
+    if (!winnerResult.textContent) {
+        if (compWins == 5) {
+            return winnerResult.textContent = "Computer Wins!";
+        }
+        else if (playerWins == 5) {
+            return winnerResult.textContent = "Player Wins";
+        }
+    }
+      
+}
 //plays one round round returning a win, loss, tie, or invalid
-function playRound(compSelection, playerSelection) {
+function playRound(compSelection, playerSelection) {   
     switch (compSelection + playerSelection) {
         case 'RockScissors':
         case 'ScissorsPaper':
         case 'PaperRock':
-            return `You lose`;
+            compWins += 1;
+            return `You lose! ${compSelection} beats ${playerSelection}.`;
+            
         case 'ScissorsRock':
         case 'RockPaper':
         case 'PaperScissors':
-            return `You win`;
+            playerWins += 1;
+            return `You win! ${playerSelection} beats ${compSelection}.`;
         case 'RockRock':
         case 'ScissorsScissors':
         case 'PaperPaper':
-            return 'Tie';
+            return `It's a tie, try again!`;
         default:
-            return `invalid` ;
+            return `invalid` ; 
     } 
     
 
 }
-let winCount = 0;
-let lossCount = 0;
-let tieCount = 0;
 
-function playGame(playRound) {
-    for (let i = 0; i < 5; i++) {
-        compSelection = arrayRPS[randomNum()]; 
-        playerInput = prompt('Type your play (Rock, Paper, or Scissors)')
-        playerSelection = playerInput.charAt(0).toUpperCase() + playerInput.slice(1).toLowerCase();
-        console.log(playerSelection);
-        console.log(compSelection);
-        if (playRound(compSelection, playerSelection) === 'You win') {
-            winCount++;
-            console.log(`You won, ${playerSelection} beats ${compSelection}!`);
-        }
-        else if (playRound(compSelection, playerSelection) === 'You lose') {
-            lossCount++;
-            console.log(`You lost, ${playerSelection} loses to ${compSelection}.`)
-        }
-        else if (playRound(compSelection, playerSelection) === 'Tie') {
-            tieCount++;
-            console.log(`You both played ${compSelection}, its a tie!`);
-        }
-        else {
-            console.log(`Enter Rock, Paper, or Scissors`);
-            i--
-        }
-    }
-    return(`You won ${winCount} games, lost ${lossCount} games, and tied ${tieCount} games.`);
-}
-console.log(playGame(playRound));
+
+
+
+
+
 
 
 
